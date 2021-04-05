@@ -9,7 +9,7 @@ const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 5000;
 // Require Routes
-const authRoutes = require('./routes/auth.routes')
+const authRoutes = require('./routes/auth.routes');
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,9 +25,8 @@ mongoose
   .then(() => console.log('Mongo Db Connected'))
   .catch((err) => console.log(`error connection to the DataBase : ${err}`));
 // Routes
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
 // app express
-app.listen(PORT, () =>
-{
+app.listen(PORT, () => {
   console.log(`app listning : localhost:${PORT}`);
 });

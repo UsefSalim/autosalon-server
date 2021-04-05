@@ -20,7 +20,7 @@ const ownerSchema = Schema({
   color: {
     type: String,
     required: true,
-    min: 3
+    min: 3,
   },
   price: {
     type: Number,
@@ -29,14 +29,13 @@ const ownerSchema = Schema({
   fuel: {
     type: String,
     required: true,
-    ennum: ['Gasoil', 'Diesel']
+    ennum: ['Gasoil', 'Diesel'],
   },
   is_saled: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
-
 });
 
 module.exports = model('owner', ownerSchema);

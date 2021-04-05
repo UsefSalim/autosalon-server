@@ -6,17 +6,17 @@ const reserveCarSchema = Schema({
   id_owner: {
     type: Schema.Types.ObjectId,
     ref: 'owner',
-    required: true
+    required: true,
   },
   id_client: {
     type: Schema.Types.ObjectId,
     ref: 'client',
-    required: true
+    required: true,
   },
   id_car: {
     type: Schema.Types.ObjectId,
     ref: 'car',
-    required: true
+    required: true,
   },
   proposed_reduction: {
     type: Number,
@@ -25,8 +25,7 @@ const reserveCarSchema = Schema({
     type: Boolean,
     required: true,
     default: false,
-  }
-
+  },
 });
 
 module.exports = model('reserveCar', reserveCarSchema);

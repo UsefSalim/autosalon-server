@@ -6,19 +6,18 @@ const ownerCarSchema = Schema({
   id_owner: {
     type: Schema.Types.ObjectId,
     ref: 'owner',
-    required: true
+    required: true,
   },
   id_place: {
     type: Schema.Types.ObjectId,
     ref: 'place',
-    required: true
+    required: true,
   },
   id_car: {
     type: Schema.Types.ObjectId,
     ref: 'car',
-    required: true
+    required: true,
   },
-
 });
 
 module.exports = model('ownerCar', ownerCarSchema);

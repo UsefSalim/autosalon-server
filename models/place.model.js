@@ -10,8 +10,8 @@ const placeSchema = Schema({
   is_free: {
     type: Boolean,
     required: true,
-    default: true
-  }
+    default: true,
+  },
 });
 
 module.exports = model('place', placeSchema);

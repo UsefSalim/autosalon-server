@@ -6,14 +6,13 @@ const tryCarSchema = Schema({
   id_car: {
     type: Schema.Types.ObjectId,
     ref: 'car',
-    required: true
+    required: true,
   },
   id_client: {
     type: Schema.Types.ObjectId,
     ref: 'client',
-    required: true
+    required: true,
   },
-
 });
 
 module.exports = model('tryCar', tryCarSchema);
