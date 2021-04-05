@@ -1,3 +1,4 @@
+const Car = require('../models/car.model');
 /**
  *
  * @param {*} req

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
-const ownerSchema = Schema({
+const carSchema = Schema({
   registration_number: {
     type: String,
     required: true,
@@ -38,4 +38,4 @@ const ownerSchema = Schema({
   },
 });
 
-module.exports = model('owner', ownerSchema);
+module.exports = model('car', carSchema);

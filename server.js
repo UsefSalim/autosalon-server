@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/auth.routes');
 const clientRoutes = require('./routes/client.routes');
 const ownerRoutes = require('./routes/owner.routes');
-
+// const Place = require('./models/place.model');
 // Middleware
 
 app.use(express.json());
@@ -26,6 +26,16 @@ if (process.env.NODE_ENV === 'developpement') app.use(morgan('tiny'));
 app.use('/api/auth', authRoutes);
 app.use('/api/owner', ownerRoutes);
 app.use('/api/client', clientRoutes);
+// app.use('/createplaces', async (req, res) => {
+//   try {
+//     for (let index = 1; index < 30; index++) {
+//       const newPlace = new Place({ place_number: index });
+//       const savedPlace = await newPlace.save();
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 // app express
 
