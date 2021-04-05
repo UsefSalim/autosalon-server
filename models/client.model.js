@@ -15,6 +15,12 @@ const clientSchema = Schema({
     min: 3,
     max: 24
   },
+  password: {
+    type: String,
+    required: true,
+    min: 6,
+    max: 1024
+  },
   cin: {
     type: String,
     required: true,
@@ -34,6 +40,8 @@ const clientSchema = Schema({
   phone: {
     type: String,
     required: true,
+    min: 10,
+    max: 10
   }
 
 });
