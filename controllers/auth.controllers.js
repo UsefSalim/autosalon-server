@@ -51,7 +51,7 @@ exports.loginController = (req, res) => {
 exports.logoutController = (req, res) => {
   res.cookie('clientLogToken', '', { maxAge: 1 });
   res.cookie('ownerLogToken', '', { maxAge: 1 });
-  res.redirect('/');
+  res.status(200).json({ LogoutSucessMessage: 'Logout 👍' });
 };
 
 const registerClient = async (req, res) => {
@@ -97,7 +97,6 @@ const registerOwner = async (req, res) => {
       });
     // create a new owner
     const newOwner = new Owner({ ...req.body });
-    console.log(newOwner);
     newOwner.password = await bcrypt.hash(
       req.body.password,
       await bcrypt.genSalt(10)
@@ -122,6 +121,7 @@ const loginClient = async (req, res) => {
     return res
       .status(400)
       .json({ ErrorClientLogin: 'mail ou password incorrect' });
+  // eslint-disable-next-line no-underscore-dangle
   const token = createToken({ id: clientExist._id, role: 'Client' });
   res
     .cookie('clientLogToken', token, {
@@ -143,6 +143,7 @@ const loginOwner = async (req, res) => {
     return res
       .status(400)
       .json({ ErrorOwnerLogin: 'mail ou password incorrect' });
+  // eslint-disable-next-line no-underscore-dangle
   const token = createToken({ id: ownerExist._id, role: 'Owner' });
   res
     .cookie('ownerLogToken', token, {
