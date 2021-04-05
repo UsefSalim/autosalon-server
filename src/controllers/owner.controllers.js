@@ -47,14 +47,14 @@ exports.ownerAddCar = async (req, res) => {
       .status(400)
       .json({ ErrorValidationsAddCar: error.details[0].message });
   try {
-    const task = Fawn.Task();
-    const newCar = new Car({ ...req.body });
     const placeDispo = await Place.findOne({ is_free: true });
+    const newCar = new Car({ ...req.body });
     const createOwnerCar = new OwnerCar({
       id_owner: Owner._id,
       id_place: placeDispo._id,
       id_car: newCar._id,
     });
+    const task = Fawn.Task();
     if (placeDispo) {
       const createCarAndOwnerCar = await task
         .save('car', newCar)

@@ -1,5 +1,5 @@
-require('dotenv').config({ path: './config/.env' });
-require('./config/db.js');
+require('dotenv').config({ path: './src/config/.env' });
+require('./src/config/db.js');
 // packages
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 5000;
 
 // Require Routes
 
-const authRoutes = require('./routes/auth.routes');
-const clientRoutes = require('./routes/client.routes');
-const ownerRoutes = require('./routes/owner.routes');
+const authRoutes = require('./src/routes/auth.routes');
+const clientRoutes = require('./src/routes/client.routes');
+const ownerRoutes = require('./src/routes/owner.routes');
 // const Place = require('./models/place.model');
 // Middleware
 

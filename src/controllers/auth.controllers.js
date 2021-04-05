@@ -54,6 +54,7 @@ exports.logoutController = (req, res) => {
   res.status(200).json({ LogoutSucessMessage: 'Logout 👍' });
 };
 
+// register client
 const registerClient = async (req, res) => {
   // validations de la data
   const { error } = clientRegisterValidation(req.body);
@@ -80,7 +81,7 @@ const registerClient = async (req, res) => {
     return res.status(500).json({ CatchedError: error });
   }
 };
-
+// register owner
 const registerOwner = async (req, res) => {
   // validations de la data
   const { error } = ownerRegisterValidations(req.body);
@@ -108,19 +109,23 @@ const registerOwner = async (req, res) => {
     return res.status(500).json({ CatchedError: error });
   }
 };
-
+// login client
 const loginClient = async (req, res) => {
+  // gestion des erreur de validation
   const { error } = LoginValidation(req.body);
   if (error)
     return res.status(400).json({ ErrorClientLogin: error.details[0].message });
+  // verrifier si le mail est deja existant dans la bas de donné
   const clientExist = await Client.findOne({ email: req.body.email });
   if (
     !clientExist ||
     !(await bcrypt.compare(req.body.password, clientExist.password))
   )
+    // si le mail est pas existant ou le mots de pass ne match pas avec le hash
     return res
       .status(400)
       .json({ ErrorClientLogin: 'mail ou password incorrect' });
+  // Clreation du token avec id et role
   // eslint-disable-next-line no-underscore-dangle
   const token = createToken({ id: clientExist._id, role: 'Client' });
   res
@@ -131,6 +136,7 @@ const loginClient = async (req, res) => {
     .json({ SucessLoginClient: 'user Loged Succesfully' });
 };
 
+// login owner
 const loginOwner = async (req, res) => {
   const { error } = LoginValidation(req.body);
   if (error)
