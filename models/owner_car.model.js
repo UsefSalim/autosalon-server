@@ -20,4 +20,4 @@ const ownerCarSchema = Schema({
   },
 });
 
-module.exports = model('ownerCar', ownerCarSchema);
+module.exports = model('ownercar', ownerCarSchema);
