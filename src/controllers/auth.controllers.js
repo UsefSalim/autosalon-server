@@ -49,9 +49,9 @@ exports.loginController = (req, res) => {
  * @method : GET
  */
 exports.logoutController = (req, res) => {
-  res.cookie('clientLogToken', '', { maxAge: 1 });
-  res.cookie('ownerLogToken', '', { maxAge: 1 });
-  res.status(200).json({ LogoutSucessMessage: 'Logout 👍' });
+  req.cookies.clientLogToken
+    ? res.clearCookie('clientLogToken').json('Logout Client 👍')
+    : res.clearCookie('ownerLogToken').json('Logout Owner 👌');
 };
 
 // register client
