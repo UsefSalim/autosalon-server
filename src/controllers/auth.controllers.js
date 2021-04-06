@@ -26,7 +26,9 @@ const createToken = (data) =>
  * @method : POST
  */
 exports.registreController = (req, res) => {
-  req.body.rib ? registerOwner(req, res) : registerClient(req, res);
+  req.body.role === 'Client'
+    ? registerClient(req, res)
+    : registerOwner(req, res);
 };
 /**
  *

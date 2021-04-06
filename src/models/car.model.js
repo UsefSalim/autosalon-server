@@ -6,6 +6,7 @@ const carSchema = Schema({
   registration_number: {
     type: String,
     required: true,
+    unique: true,
   },
   name: {
     type: String,
@@ -29,7 +30,7 @@ const carSchema = Schema({
   fuel: {
     type: String,
     required: true,
-    ennum: ['Gasoil', 'Diesel'],
+    ennum: ['Gasoil', 'Diesel', 'Hybrid'],
   },
   is_saled: {
     type: Boolean,

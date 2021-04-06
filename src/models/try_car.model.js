@@ -15,4 +15,4 @@ const tryCarSchema = Schema({
   },
 });
 
-module.exports = model('tryCar', tryCarSchema);
+module.exports = model('trycar', tryCarSchema);

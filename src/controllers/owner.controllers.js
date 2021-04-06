@@ -56,11 +56,20 @@ exports.ownerAddCar = async (req, res) => {
     });
     const task = Fawn.Task();
     if (placeDispo) {
-      const createCarAndOwnerCar = await task
+      const createCarAndOwnerCarAndUpdateDisponibility = await task
         .save('car', newCar)
         .save('ownercar', createOwnerCar)
+        .update(
+          'place',
+          { _id: placeDispo._id },
+          {
+            $set: {
+              is_free: false,
+            },
+          }
+        )
         .run({ useMongoose: true });
-      if (createCarAndOwnerCar)
+      if (createCarAndOwnerCarAndUpdateDisponibility)
         res
           .status(201)
           .json({ creationCarValidation: 'car created succesfully' });

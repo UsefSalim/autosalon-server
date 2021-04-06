@@ -9,4 +9,6 @@ mongoose
   .then(() => console.log('Mongo Db Connected'))
   .catch((err) => console.log(`error connection to the DataBase : ${err}`));
 
+// Ajouter Deconnection !!!
+
 Fawn.init(mongoose);

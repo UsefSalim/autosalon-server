@@ -28,4 +28,4 @@ const reserveCarSchema = Schema({
   },
 });
 
-module.exports = model('reserveCar', reserveCarSchema);
+module.exports = model('reservecar', reserveCarSchema);
