@@ -1,11 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const Fawn = require('fawn');
-const Car = require('../models/car.model');
-const OwnerCar = require('../models/owner_car.model');
-const ReserveCars = require('../models/reserve_car.model');
-const Place = require('../models/place.model');
-
 const { carValidations } = require('../validations/car.validations');
+const { profileRequests, addCarsRequests } = require('../utils/owner.requests');
 /**
  *
  * @param {*} req
@@ -19,8 +14,7 @@ const { carValidations } = require('../validations/car.validations');
 exports.ownerProfileController = async (req, res) => {
   try {
     const Owner = res.currentUser;
-    const ownerCars = await OwnerCar.find({ id_owner: Owner._id });
-    const reserveCars = await ReserveCars.find({ id_owner: Owner._id });
+    const { ownerCars, reserveCars } = await profileRequests(Owner);
     res.status(200).json({
       Owner,
       ownerCars,
@@ -47,32 +41,14 @@ exports.ownerAddCar = async (req, res) => {
       .status(400)
       .json({ ErrorValidationsAddCar: error.details[0].message });
   try {
-    const placeDispo = await Place.findOne({ is_free: true });
-    const newCar = new Car({ ...req.body });
-    const createOwnerCar = new OwnerCar({
-      id_owner: Owner._id,
-      id_place: placeDispo._id,
-      id_car: newCar._id,
-    });
-    const task = Fawn.Task();
-    if (placeDispo) {
-      const createCarAndOwnerCarAndUpdateDisponibility = await task
-        .save('car', newCar)
-        .save('ownercar', createOwnerCar)
-        .update(
-          'place',
-          { _id: placeDispo._id },
-          {
-            $set: {
-              is_free: false,
-            },
-          }
-        )
-        .run({ useMongoose: true });
-      if (createCarAndOwnerCarAndUpdateDisponibility)
-        res
-          .status(201)
-          .json({ creationCarValidation: 'car created succesfully' });
+    const {
+      createCarAndOwnerCarAndUpdateDisponibility,
+      placeDispo,
+    } = await addCarsRequests(Owner);
+    if (placeDispo && createCarAndOwnerCarAndUpdateDisponibility) {
+      res
+        .status(201)
+        .json({ creationCarValidation: 'car created succesfully' });
     }
   } catch (error) {
     res.status(500).json({ errorAddCar: error });

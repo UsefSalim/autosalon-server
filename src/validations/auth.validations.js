@@ -9,6 +9,7 @@ exports.ownerRegisterValidations = (data) => {
     email: Joi.string().email().required(),
     phone: Joi.string().required().min(10).max(10).trim(),
     rib: Joi.string().required().min(24).max(24).trim(),
+    role: Joi.string().valid('Client', 'Owner'),
   });
 
   return schema.validate(data);
@@ -21,6 +22,7 @@ exports.clientRegisterValidation = (data) => {
     cin: Joi.string().required().min(7).max(8).trim(),
     email: Joi.string().email().required(),
     phone: Joi.string().required().min(10).max(10).trim(),
+    role: Joi.string().valid('Client', 'Owner'),
   });
 
   return schema.validate(data);
