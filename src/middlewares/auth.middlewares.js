@@ -26,12 +26,16 @@ exports.auth = async (req, res, next) => {
         }
         next();
       } else {
-        res.cookie('token', '', { maxAge: 1 });
-        return res.status(401).json(`private root need ${res.Role} login`);
+        decodedToken.data.role === 'Client'
+          ? res
+              .clearCookie('clientLogToken')
+              .json(`private root need ${res.Role} login`)
+          : res
+              .clearCookie('ownerLogToken')
+              .json(`private root need ${res.Role} login`);
       }
     });
   } else {
-    res.cookie('token', '', { maxAge: 1 });
     return res.status(400).json(`private root need ${res.Role} login`);
   }
 };

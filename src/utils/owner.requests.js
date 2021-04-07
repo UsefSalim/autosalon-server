@@ -9,30 +9,30 @@ exports.profileRequests = async ({ _id }) => ({
   reserveCars: await ReserveCars.find({ id_owner: _id }),
 });
 
-exports.addCarsRequests = async (Owner) => {
-  const task = Fawn.Task();
-  const newCar = new Car({ ...req.body });
+exports.addCarsRequests = async (Owner, req) => {
   const placeDispo = await Place.findOne({ is_free: true });
+  const newCar = new Car({ ...req.body });
   const createOwnerCar = new OwnerCar({
     id_owner: Owner._id,
     id_place: placeDispo._id,
     id_car: newCar._id,
   });
-  const createCarAndOwnerCarAndUpdateDisponibility = await task
-    .save('car', newCar)
-    .save('ownercar', createOwnerCar)
-    .update(
-      'place',
-      { _id: placeDispo._id },
-      {
-        $set: {
-          is_free: false,
-        },
-      }
-    )
-    .run({ useMongoose: true });
-  return {
-    placeDispo,
-    createCarAndOwnerCarAndUpdateDisponibility,
-  };
+  const task = Fawn.Task();
+  if (placeDispo) {
+    const createCarAndOwnerCarAndUpdateDisponibility = await task
+      .save('car', newCar)
+      .save('ownercar', createOwnerCar)
+      .update(
+        'place',
+        { _id: placeDispo._id },
+        {
+          $set: {
+            is_free: false,
+          },
+        }
+      )
+      .run({ useMongoose: true });
+    if (createCarAndOwnerCarAndUpdateDisponibility)
+      return createCarAndOwnerCarAndUpdateDisponibility;
+  }
 };

@@ -33,6 +33,8 @@ exports.ownerProfileController = async (req, res) => {
  * @method : POST
  * @type : Private
  */
+
+/// a refactoré
 exports.ownerAddCar = async (req, res) => {
   const Owner = res.currentUser;
   const { error } = carValidations(req.body);
@@ -41,15 +43,14 @@ exports.ownerAddCar = async (req, res) => {
       .status(400)
       .json({ ErrorValidationsAddCar: error.details[0].message });
   try {
-    const {
-      createCarAndOwnerCarAndUpdateDisponibility,
-      placeDispo,
-    } = await addCarsRequests(Owner);
-    if (placeDispo && createCarAndOwnerCarAndUpdateDisponibility) {
+    const createCarAndOwnerCarAndUpdateDisponibility = await addCarsRequests(
+      Owner,
+      req
+    );
+    if (createCarAndOwnerCarAndUpdateDisponibility)
       res
         .status(201)
         .json({ creationCarValidation: 'car created succesfully' });
-    }
   } catch (error) {
     res.status(500).json({ errorAddCar: error });
   }

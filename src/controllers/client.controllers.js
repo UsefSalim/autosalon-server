@@ -8,6 +8,7 @@ const {
   esseyVoitureRequest,
   reserverdCarWithReduction,
   reservationwithoutReduction,
+  getCurrentCar,
 } = require('../utils/client.requests');
 /**
  *
@@ -99,8 +100,12 @@ exports.reservationCar = async (req, res) => {
   const id_client = res.currentUser._id;
   const id_car = req.params.idcar;
   const { proposed_reduction } = req.body;
-
   try {
+    const currentCar = await getCurrentCar(id_car);
+    if (!currentCar)
+      return res.status(400).json({
+        ErrorFindCar: "La voiture que vous souhaiter esseyé n'existe pas",
+      });
     proposed_reduction
       ? reserverdCarWithReduction(id_car, id_client, proposed_reduction, res)
       : reservationwithoutReduction(id_car, id_client, res);

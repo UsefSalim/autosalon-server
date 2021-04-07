@@ -91,7 +91,7 @@ exports.loginClient = async (req, res) => {
       .json({ ErrorClientLogin: 'mail ou password incorrect' });
   // Clreation du token avec id et role
   // eslint-disable-next-line no-underscore-dangle
-  const token = createToken({ id: clientExist._id, role: 'Client' });
+  const token = this.createToken({ id: clientExist._id, role: 'Client' });
   res
     .cookie('clientLogToken', token, {
       httpOnly: true,
@@ -114,7 +114,7 @@ exports.loginOwner = async (req, res) => {
       .status(400)
       .json({ ErrorOwnerLogin: 'mail ou password incorrect' });
   // eslint-disable-next-line no-underscore-dangle
-  const token = createToken({ id: ownerExist._id, role: 'Owner' });
+  const token = this.createToken({ id: ownerExist._id, role: 'Owner' });
   res
     .cookie('ownerLogToken', token, {
       httpOnly: true,

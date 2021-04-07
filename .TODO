@@ -1,0 +1,21 @@
+## les tache 
+        vljqebvjfvb fdw,;cx:pZKMSF? CXzzzzz
+  - Authentification 
+    * client register ✔ 
+    * owner register ✔
+    * client login with generation token  ✔
+    * owner  login with generation token   ✔
+    * logout destroy token client ✔
+    * logout destroy token owner  ✔
+  - Owner Routes 
+    * owner profile with allOwner cars and awner reserver cars ✔
+    * owner add car   ✔
+    * accepter ou refuser la proposition de reduction 
+  - Client Routes
+    * client Profile with all disponible cars 
+    * essey car  
+    * reservation get roote -> info car info owner info client 
+    * reservation post :
+      - reservation avec Remise ✔
+      - reservation sans remise ✔   
+    

@@ -23,6 +23,7 @@ exports.reservationRequest = async (id_car) => {
 };
 exports.findAll = async (validation) =>
   await Car.find({ is_saled: validation });
+exports.getCurrentCar = async (id_car) => await Car.findOne({ _id: id_car });
 
 exports.esseyVoitureRequest = async (id_client, id_car, newGlobalTries) => {
   const task = Fawn.Task();
@@ -30,8 +31,9 @@ exports.esseyVoitureRequest = async (id_client, id_car, newGlobalTries) => {
     id_car,
     id_client,
   });
+  const currentCar = this.getCurrentCar(id_car);
   return {
-    currentCar: await Car.findOne({ _id: id_car }),
+    currentCar,
     ifCarEsseyed: await TryCar.findOne({ id_car, id_client }),
     saveTryCarAndUpdateClient: await task
       .save('trycar', newTryCar)
@@ -51,6 +53,7 @@ exports.reserverdCarWithReduction = async (
   res
 ) => {
   const { id_owner } = await this.findIdOwnerFromIdCar(id_car);
+  console.log(id_owner);
   const newReservation = new ReserveCar({
     id_car,
     id_client,
