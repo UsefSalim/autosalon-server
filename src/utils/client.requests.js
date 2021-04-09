@@ -23,6 +23,7 @@ exports.reservationRequest = async (id_car) => {
 };
 exports.findAll = async (validation) =>
   await Car.find({ is_saled: validation });
+
 exports.getCurrentCar = async (id_car) => await Car.findOne({ _id: id_car });
 
 exports.esseyVoitureRequest = async (id_client, id_car, newGlobalTries) => {

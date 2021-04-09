@@ -1,3 +1,4 @@
+/* eslint-disable no-return-await */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //! require Client and Owner Model
@@ -9,68 +10,36 @@ const {
   LoginValidation,
 } = require('../validations/auth.validations');
 
-exports.clientRegisterRequest = async (req) => {
-  const newClient = new Client({ ...req.body });
-  newClient.password = await bcrypt.hash(
+exports.createUser = async (req, Model) => {
+  const newUser = new Model({ ...req.body });
+  newUser.password = await bcrypt.hash(
     req.body.password,
     await bcrypt.genSalt(10)
   );
-  return {
-    clientExist: await Client.findOne({ email: req.body.email }),
-    savedClient: await newClient.save(),
-  };
+  return await newUser.save();
 };
-exports.ownerRegisterRequest = async (req) => {
-  const newOwner = new Owner({ ...req.body });
-  newOwner.password = await bcrypt.hash(
-    req.body.password,
-    await bcrypt.genSalt(10)
-  );
+exports.ifUserExist = async (req, Model) =>
+  await Model.findOne({ email: req.body.email });
 
-  return {
-    ownerExist: await Owner.findOne({ email: req.body.email }),
-    savedOwner: await newOwner.save(),
-  };
-};
 exports.createToken = (data) =>
   jwt.sign({ data }, process.env.SECRET_TOKEN, {
     expiresIn: process.env.JWT_EXPIRATION_TIME,
   });
-exports.registerClient = async (req, res) => {
+exports.register = async (req, res, validations, Model, Role) => {
   // validations de la data
-  const { error } = clientRegisterValidation(req.body);
+  const { error } = validations(req.body);
   if (error)
-    return res
-      .status(400)
-      .json({ ErrorClientRegister: error.details[0].message });
+    return res.status(400).json({ ErrorRegister: error.details[0].message });
   try {
-    const { clientExist, savedClient } = await this.clientRegisterRequest(req);
-    if (clientExist)
-      return res.status(400).json({
-        ErrorMailClientExist: 'compte existant veiller vous connecter',
-      });
-    if (savedClient) return res.status(201).json('User Created Succesfuly');
+    if (await this.ifUserExist(req, Model))
+      return res
+        .status(400)
+        .json(
+          `Compte avec l'adress mail ${req.body.email} déja existant veiller vous connecter`
+        );
+    if (await this.createUser(req, Model)) return res.status(201).json(Role);
   } catch (error) {
-    return res.status(500).json({ CatchedError: error });
-  }
-};
-// register owner
-exports.registerOwner = async (req, res) => {
-  // validations de la data
-  const { error } = ownerRegisterValidations(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ ErrorOwnerRegister: error.details[0].message });
-  try {
-    const { ownerExist, savedOwner } = await this.ownerRegisterRequest(req);
-    if (ownerExist)
-      return res.status(400).json({
-        ErrorMailOwnerExist: 'compte existant veiller vous connecter',
-      });
-    if (savedOwner) return res.status(201).json('Owner Created Succesfuly');
-  } catch (error) {
-    return res.status(500).json({ CatchedError: error });
+    return res.status(500).json(error);
   }
 };
 // login client

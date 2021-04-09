@@ -41,8 +41,9 @@ exports.clientProfileController = async (req, res) => {
 exports.esseyVoiture = async (req, res) => {
   const id_client = res.currentUser._id;
   const id_car = req.params.idcar;
+  // global tries a updaté dans la request
   const newGlobalTries = res.currentUser.global_tries + 1;
-  if (res.currentUser.global_tries == 10)
+  if (res.currentUser.global_tries >= 10)
     return res
       .status(400)
       .json({ ErrorEssyCar: "Vous avez depasser le nombre d'essey " });

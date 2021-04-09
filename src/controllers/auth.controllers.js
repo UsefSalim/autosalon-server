@@ -1,9 +1,11 @@
+const { register, loginClient, loginOwner } = require('../utils/auth.requests');
 const {
-  registerOwner,
-  registerClient,
-  loginClient,
-  loginOwner,
-} = require('../utils/auth.requests');
+  clientRegisterValidation,
+  ownerRegisterValidations,
+  LoginValidation,
+} = require('../validations/auth.validations');
+const Owner = require('../models/owner.model');
+const Client = require('../models/client.model');
 /**
  *
  * @param {*} req
@@ -13,7 +15,9 @@ const {
  * @method : POST
  */
 exports.registreController = (req, res) => {
-  req.body.rib ? registerOwner(req, res) : registerClient(req, res);
+  !req.body.role
+    ? register(req, res, clientRegisterValidation, Client, 'Client')
+    : register(req, res, ownerRegisterValidations, Owner, 'Owner');
 };
 /**
  *
@@ -24,7 +28,7 @@ exports.registreController = (req, res) => {
  * @method : POST
  */
 exports.loginController = (req, res) => {
-  req.body.role === 'Client' ? loginClient(req, res) : loginOwner(req, res);
+  !req.body.role ? loginClient(req, res) : loginOwner(req, res);
 };
 
 /**
