@@ -66,7 +66,7 @@ exports.loginClient = async (req, res) => {
       httpOnly: true,
       maxAge: process.env.JWT_EXPIRATION_TIME,
     })
-    .json('Client');
+    .json({ role: 'Client', isAuthenticated: true });
 };
 
 // login owner
@@ -89,5 +89,5 @@ exports.loginOwner = async (req, res) => {
       httpOnly: true,
       maxAge: process.env.JWT_EXPIRATION_TIME,
     })
-    .json('Owner');
+    .json({ role: 'Owner', isAuthenticated: true });
 };

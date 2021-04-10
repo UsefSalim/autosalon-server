@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Require Routes
-
+const { verifIsAuthenticated } = require('./src/middlewares/auth.middlewares');
 const authRoutes = require('./src/routes/auth.routes');
 const clientRoutes = require('./src/routes/client.routes');
 const ownerRoutes = require('./src/routes/owner.routes');
@@ -28,6 +28,9 @@ app.use(
 if (process.env.NODE_ENV === 'developpement') app.use(morgan('tiny'));
 
 app.use('/api/auth', authRoutes);
+app.use('*', verifIsAuthenticated, (req, res, next) => {
+  next();
+});
 app.use('/api/owner', ownerRoutes);
 app.use('/api/client', clientRoutes);
 // app express
