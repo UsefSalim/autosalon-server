@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-return-await */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -35,9 +36,18 @@ exports.register = async (req, res, validations, Model, Role) => {
       return res
         .status(400)
         .json(
-          `Compte avec l'adress mail ${req.body.email} déja existant veiller vous connecter`
+          `Compte avec ${Role} l'adress mail ${req.body.email} déja existant veiller vous connecter`
         );
-    if (await this.createUser(req, Model)) return res.status(201).json(Role);
+    const savedUser = await this.createUser(req, Model);
+    const token = this.createToken({ id: savedUser._id, role: Role });
+    if (savedUser)
+      return res
+        .status(201)
+        .cookie(`${Role}LogToken`, token, {
+          httpOnly: true,
+          maxAge: process.env.JWT_EXPIRATION_TIME,
+        })
+        .json({ role: Role, isAuthenticated: true });
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -62,7 +72,8 @@ exports.loginClient = async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const token = this.createToken({ id: clientExist._id, role: 'Client' });
   res
-    .cookie('clientLogToken', token, {
+    .status(200)
+    .cookie('ClientLogToken', token, {
       httpOnly: true,
       maxAge: process.env.JWT_EXPIRATION_TIME,
     })
@@ -85,7 +96,7 @@ exports.loginOwner = async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const token = this.createToken({ id: ownerExist._id, role: 'Owner' });
   res
-    .cookie('ownerLogToken', token, {
+    .cookie('OwnerLogToken', token, {
       httpOnly: true,
       maxAge: process.env.JWT_EXPIRATION_TIME,
     })

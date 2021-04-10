@@ -15,16 +15,16 @@ exports.ownerMiddleware = (req, res, next) => {
 };
 exports.auth = async (req, res, next) => {
   // const Model = res.role;
-  const token = req.cookies.ownerLogToken || req.cookies.clientLogToken;
+  const token = req.cookies.OwnerLogToken || req.cookies.ClientLogToken;
   if (token) {
     jwt.verify(token, process.env.SECRET_TOKEN, async (err, decodedToken) => {
       if (err) {
         decodedToken.data.role === 'Client'
           ? res
-              .clearCookie('clientLogToken')
+              .clearCookie('ClientLogToken')
               .json(`private root need ${res.Role} login`)
           : res
-              .clearCookie('ownerLogToken')
+              .clearCookie('OwnerLogToken')
               .json(`private root need ${res.Role} login`);
       } else {
         res.currentUser = await res.Model.findOne({
@@ -39,18 +39,19 @@ exports.auth = async (req, res, next) => {
 };
 
 exports.verifIsAuthenticated = (req, res, next) => {
-  const token = req.cookies.ownerLogToken || req.cookies.clientLogToken;
+  const token = req.cookies.OwnerLogToken || req.cookies.ClientLogToken;
   if (token) {
     jwt.verify(token, process.env.SECRET_TOKEN, async (err, decodedToken) => {
       if (err) {
         decodedToken.data.role === 'Client'
           ? res
-              .clearCookie('clientLogToken')
+              .clearCookie('ClientLogToken')
               .json({ role: '', isAuthenticated: false })
           : res
-              .clearCookie('ownerLogToken')
+              .clearCookie('OwnerLogToken')
               .json({ role: '', isAuthenticated: false });
       } else {
+        // console.log(object);
         decodedToken.data.role === 'Client'
           ? res.status(200).json({ role: 'Client', isAuthenticated: true })
           : res.status(200).json({ role: 'Owner', isAuthenticated: true });

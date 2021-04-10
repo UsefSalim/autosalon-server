@@ -40,7 +40,11 @@ exports.loginController = (req, res) => {
  * @method : GET
  */
 exports.logoutController = (req, res) => {
-  req.cookies.clientLogToken
-    ? res.clearCookie('clientLogToken').json('Logout Client 👍')
-    : res.clearCookie('ownerLogToken').json('Logout Owner 👌');
+  req.cookies.ClientLogToken
+    ? res
+        .clearCookie('ClientLogToken')
+        .json({ role: '', isAuthenticated: false })
+    : res
+        .clearCookie('OwnerLogToken')
+        .json({ role: '', isAuthenticated: false });
 };
