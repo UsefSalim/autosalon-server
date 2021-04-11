@@ -20,6 +20,7 @@ const reserveCarSchema = Schema({
   },
   proposed_reduction: {
     type: Number,
+    default: 0,
   },
   is_accepted: {
     type: Boolean,

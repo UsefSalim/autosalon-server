@@ -14,11 +14,16 @@ const { profileRequests, addCarsRequests } = require('../utils/owner.requests');
 exports.ownerProfileController = async (req, res) => {
   try {
     const Owner = res.currentUser;
-    const { ownerCars, reserveCars } = await profileRequests(Owner);
+    const {
+      ownerCars,
+      reserveCars,
+      reserveCarReduction,
+    } = await profileRequests(Owner);
     res.status(200).json({
       Owner,
       ownerCars,
       reserveCars,
+      reserveCarReduction,
     });
   } catch (error) {
     res.status(500).json({ ownerProfileErrorCatched: error });

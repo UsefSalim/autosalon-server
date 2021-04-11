@@ -106,6 +106,7 @@ exports.reservationCar = async (req, res) => {
       return res.status(400).json({
         ErrorFindCar: "La voiture que vous souhaiter esseyé n'existe pas",
       });
+    console.log(req.body);
     proposed_reduction
       ? reserverdCarWithReduction(id_car, id_client, proposed_reduction, res)
       : reservationwithoutReduction(id_car, id_client, res);

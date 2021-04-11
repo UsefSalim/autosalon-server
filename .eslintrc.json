@@ -35,7 +35,7 @@
       }
     ],
     "no-plusplus": "off",
-    "complexity": ["error", 6],
+    "complexity": ["error", 10],
     "default-case": "error",
     "import/no-unresolved": "off"
   }

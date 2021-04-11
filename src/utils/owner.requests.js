@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 const Fawn = require('fawn');
 const Car = require('../models/car.model');
@@ -7,19 +8,57 @@ const Place = require('../models/place.model');
 
 exports.profileRequests = async ({ _id }) => {
   const ownerCars = await OwnerCar.find({ id_owner: _id });
+  const ids_reserverdCarWithReduction = [];
+  const allReserverdCarWithReduction = [];
+  const carsReserved = [];
   const ids_cars = [];
   const carsOwner = [];
+  const carsSaled = [];
   if (ownerCars) {
     ownerCars.map((car) => {
       ids_cars.push(car.id_car);
     });
     for (let index = 0; index < ids_cars.length; index++) {
-      carsOwner.push(await Car.findOne({ _id: ids_cars[index] }));
+      const ownerCar = await Car.findOne({ _id: ids_cars[index] });
+      ownerCar && carsOwner.push(ownerCar);
+      const saledCar = await Car.findOne({
+        _id: ids_cars[index],
+        is_saled: true,
+      });
+      saledCar && carsSaled.push(saledCar);
+      const ReservedCars = await ReserveCars.findOne({
+        id_owner: _id,
+        id_car: ids_cars[index],
+      });
+      ReservedCars && carsReserved.push(ReservedCars._id);
     }
-
+    ///
+    const allReservedCar = await ReserveCars.find();
+    if (allReservedCar) {
+      const proposedReduction = allReservedCar.filter(
+        (car) => car.proposed_reduction > 0
+      );
+      proposedReduction.map((car) => {
+        ids_reserverdCarWithReduction.push(car.id_car);
+      });
+      for (
+        let index = 0;
+        index < ids_reserverdCarWithReduction.length;
+        index++
+      ) {
+        const reserverCarWithReduction = await Car.findOne({
+          _id: ids_reserverdCarWithReduction[index],
+          is_saled: false,
+        });
+        reserverCarWithReduction &&
+          allReserverdCarWithReduction.push(reserverCarWithReduction);
+      }
+      console.log(allReserverdCarWithReduction);
+    }
     return {
       ownerCars: carsOwner,
-      reserveCars: await ReserveCars.find({ id_owner: _id }),
+      reserveCars: carsSaled,
+      reserveCarReduction: allReserverdCarWithReduction,
     };
   }
 };

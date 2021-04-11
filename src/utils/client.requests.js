@@ -9,7 +9,7 @@ const Owner = require('../models/owner.model');
 
 exports.findIdOwnerFromIdCar = async (id_car) => {
   const { id_owner, id_place } = await OwnerCar.findOne({ id_car }).select(
-    'id_owner -_id'
+    'id_owner id_place -_id'
   );
   return { id_owner, id_place };
 };
@@ -54,7 +54,6 @@ exports.reserverdCarWithReduction = async (
   res
 ) => {
   const { id_owner } = await this.findIdOwnerFromIdCar(id_car);
-  console.log(id_owner);
   const newReservation = new ReserveCar({
     id_car,
     id_client,
@@ -63,9 +62,7 @@ exports.reserverdCarWithReduction = async (
   });
   const reservedCar = await newReservation.save();
   if (reservedCar)
-    return res
-      .status(200)
-      .json({ ReserverdCar: 'Car reserver avec demande de reduction' });
+    return res.status(200).json('Car reserver avec demande de reduction');
 };
 
 exports.reservationwithoutReduction = async (id_car, id_client, res) => {
@@ -75,6 +72,7 @@ exports.reservationwithoutReduction = async (id_car, id_client, res) => {
     id_car,
     id_client,
     id_owner,
+    is_accepted: true,
   });
   const savereservCarAndUpdateCar = await task
     .save('reservecar', newReservation)
