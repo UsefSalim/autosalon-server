@@ -43,14 +43,12 @@ exports.ownerAddCar = async (req, res) => {
       .status(400)
       .json({ ErrorValidationsAddCar: error.details[0].message });
   try {
-    const createCarAndOwnerCarAndUpdateDisponibility = await addCarsRequests(
-      Owner,
-      req
-    );
+    const {
+      createCarAndOwnerCarAndUpdateDisponibility,
+      ownerCars,
+    } = await addCarsRequests(Owner, req);
     if (createCarAndOwnerCarAndUpdateDisponibility)
-      res
-        .status(201)
-        .json({ creationCarValidation: 'car created succesfully' });
+      res.status(201).json(ownerCars);
   } catch (error) {
     res.status(500).json({ errorAddCar: error });
   }

@@ -14,6 +14,7 @@ const { verifIsAuthenticated } = require('./src/middlewares/auth.middlewares');
 const authRoutes = require('./src/routes/auth.routes');
 const clientRoutes = require('./src/routes/client.routes');
 const ownerRoutes = require('./src/routes/owner.routes');
+const placeModel = require('./src/models/place.model.js');
 // Middleware
 
 app.use(express.json());
@@ -28,11 +29,20 @@ app.use(
 if (process.env.NODE_ENV === 'developpement') app.use(morgan('tiny'));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/owner', ownerRoutes);
+app.use('/api/client', clientRoutes);
+app.use('/createplace', async (req, res) => {
+  for (let index = 1; index < 31; index++) {
+    const newPlace = new placeModel({
+      place_number: index,
+    });
+    newPlace.save();
+  }
+});
 app.use('*', verifIsAuthenticated, (req, res, next) => {
   next();
 });
-app.use('/api/owner', ownerRoutes);
-app.use('/api/client', clientRoutes);
+
 // app express
 
 app.listen(PORT, () => {

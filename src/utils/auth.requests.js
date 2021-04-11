@@ -102,3 +102,11 @@ exports.loginOwner = async (req, res) => {
     })
     .json({ role: 'Owner', isAuthenticated: true });
 };
+
+const x = () => ({
+  y: 'y',
+  x: {
+    a: 'a',
+    b: 'b',
+  },
+});
