@@ -25,26 +25,26 @@ exports.findAll = async (validation) =>
   await Car.find({ is_saled: validation });
 
 exports.getCurrentCar = async (id_car) => await Car.findOne({ _id: id_car });
-
-exports.esseyVoitureRequest = async (id_client, id_car, newGlobalTries) => {
+exports.ifCarEsseyed = async (id_car, id_client) =>
+  await TryCar.findOne({ id_car, id_client });
+exports.esseyVoitureRequest = async (id_client, id_car, GlobalTries) => {
   const task = Fawn.Task();
   const newTryCar = new TryCar({
     id_car,
     id_client,
   });
-  const currentCar = this.getCurrentCar(id_car);
-  return {
-    currentCar,
-    ifCarEsseyed: await TryCar.findOne({ id_car, id_client }),
-    saveTryCarAndUpdateClient: await task
-      .save('trycar', newTryCar)
-      .update(
-        'client',
-        { _id: id_client },
-        { $set: { global_tries: newGlobalTries } }
-      )
-      .run({ useMongoose: true }),
-  };
+  const saveTryCarAndUpdateClient = await task
+    .save('trycar', newTryCar)
+    .update(
+      'client',
+      { _id: id_client },
+      { $set: { global_tries: GlobalTries + 1 } }
+    )
+    .run({ useMongoose: true });
+  if (saveTryCarAndUpdateClient)
+    return {
+      saveTryCarAndUpdateClient,
+    };
 };
 
 exports.reserverdCarWithReduction = async (

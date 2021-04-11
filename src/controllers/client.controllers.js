@@ -9,6 +9,7 @@ const {
   reserverdCarWithReduction,
   reservationwithoutReduction,
   getCurrentCar,
+  ifCarEsseyed,
 } = require('../utils/client.requests');
 /**
  *
@@ -39,35 +40,33 @@ exports.clientProfileController = async (req, res) => {
  * @type : Private
  */
 exports.esseyVoiture = async (req, res) => {
-  const id_client = res.currentUser._id;
+  const { _id, global_tries } = res.currentUser;
   const id_car = req.params.idcar;
   // global tries a updaté dans la request
-  const newGlobalTries = res.currentUser.global_tries + 1;
   if (res.currentUser.global_tries >= 10)
-    return res
-      .status(400)
-      .json({ ErrorEssyCar: "Vous avez depasser le nombre d'essey " });
+    return res.status(400).json("Vous avez depasser le nombre d'essey");
   try {
-    const {
-      currentCar,
-      ifCarEsseyed,
-      saveTryCarAndUpdateClient,
-    } = await esseyVoitureRequest(id_client, id_car, newGlobalTries);
-    if (!currentCar)
+    const carExiste = await getCurrentCar(id_car);
+    if (!carExiste)
       return res.status(400).json({
         ErrorFindCar: "La voiture que vous souhaiter esseyé n'existe pas",
       });
-    if (ifCarEsseyed)
-      return res.status(400).json({
-        ErrorEsseyCar: "Vous avez le doit d'un seul essey par voiture",
-      });
-    if (saveTryCarAndUpdateClient)
+    const carEsseyed = await ifCarEsseyed(id_car, _id);
+    if (carEsseyed)
+      return res
+        .status(400)
+        .json("Vous avez le doit d'un seul essey par voiture");
+    const createCarAndUpdateClientTries = await esseyVoitureRequest(
+      _id,
+      id_car,
+      global_tries
+    );
+    if (createCarAndUpdateClientTries)
       return res.status(201).json({ TryCar: 'Success' });
   } catch (error) {
     return res.status(500).json({ TryCarError: error });
   }
 };
-
 /**
  *
  * @param {*} req

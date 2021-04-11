@@ -5,7 +5,7 @@ const Client = require('../models/client.model');
 
 exports.clientMiddleware = (req, res, next) => {
   res.Role = 'Client';
-  res.model = Client;
+  res.Model = Client;
   next();
 };
 exports.ownerMiddleware = (req, res, next) => {
@@ -15,6 +15,7 @@ exports.ownerMiddleware = (req, res, next) => {
 };
 exports.auth = async (req, res, next) => {
   // const Model = res.role;
+  // console.log(Model);
   const token = req.cookies.OwnerLogToken || req.cookies.ClientLogToken;
   if (token) {
     jwt.verify(token, process.env.SECRET_TOKEN, async (err, decodedToken) => {
