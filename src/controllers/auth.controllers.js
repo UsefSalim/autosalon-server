@@ -2,7 +2,6 @@ const { register, loginClient, loginOwner } = require('../utils/auth.requests');
 const {
   clientRegisterValidation,
   ownerRegisterValidations,
-  LoginValidation,
 } = require('../validations/auth.validations');
 const Owner = require('../models/owner.model');
 const Client = require('../models/client.model');

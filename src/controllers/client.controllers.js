@@ -4,7 +4,7 @@
 /// Requests
 const {
   reservationRequest,
-  findAll,
+  profileClient,
   esseyVoitureRequest,
   reserverdCarWithReduction,
   reservationwithoutReduction,
@@ -24,8 +24,18 @@ const {
 exports.clientProfileController = async (req, res) => {
   const currentClient = res.currentUser;
   try {
-    const allCars = await findAll(false);
-    if (allCars) return res.status(200).json({ currentClient, allCars });
+    const {
+      reserverdCar,
+      allCars,
+      reservedCarWithreduction,
+    } = await profileClient(currentClient);
+    if (reserverdCar && allCars && reservedCarWithreduction)
+      return res.status(200).json({
+        allCars,
+        currentClient,
+        reservedCarWithreduction,
+        reserverdCar,
+      });
   } catch (error) {
     return res.status(500).json({ ProfileClient: error });
   }

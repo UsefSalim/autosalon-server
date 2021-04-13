@@ -39,4 +39,4 @@ const carSchema = Schema({
   },
 });
 
-module.exports = model('car', carSchema);
+module.exports = model('Car', carSchema);

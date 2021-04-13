@@ -21,8 +21,24 @@ exports.reservationRequest = async (id_car) => {
       infoOwner: await Owner.findOne({ _id: id_owner }).select('-password'),
     };
 };
-exports.findAll = async (validation) =>
-  await Car.find({ is_saled: validation });
+exports.profileClient = async ({ _id }) => {
+  const allCars = await Car.find({ is_saled: false });
+  const carsWithIdClient = await ReserveCar.find({
+    id_client: _id,
+  }).populate('id_car');
+
+  const reservedCarWithreduction = carsWithIdClient.filter(
+    (car) => car.proposed_reduction > 0 && car.is_accepted === false
+  );
+  const reserverdCar = carsWithIdClient.filter(
+    (car) => car.is_accepted === true
+  );
+  return {
+    reserverdCar,
+    allCars,
+    reservedCarWithreduction,
+  };
+};
 
 exports.getCurrentCar = async (id_car) => await Car.findOne({ _id: id_car });
 exports.ifCarEsseyed = async (id_car, id_client) =>
@@ -76,8 +92,9 @@ exports.reservationwithoutReduction = async (id_car, id_client, res) => {
   });
   const savereservCarAndUpdateCar = await task
     .save('reservecar', newReservation)
-    .update('car', { _id: id_car }, { $set: { is_saled: true } })
-    .update('place', { _id: id_place }, { $set: { is_free: true } }) //! !!!!
+    .update('Car', { _id: id_car }, { $set: { is_saled: true } })
+    .update('Place', { _id: id_place }, { $set: { is_free: true } })
+    .update('Reservecar', { id_car }, { $set: { proposed_reduction: 0 } })
     .run({ useMongoose: true });
   if (savereservCarAndUpdateCar)
     return res.status(200).json('Car Reserved avecSuccess');

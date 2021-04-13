@@ -45,4 +45,4 @@ const ownerSchema = Schema({
   },
 });
 
-module.exports = model('owner', ownerSchema);
+module.exports = model('Owner', ownerSchema);

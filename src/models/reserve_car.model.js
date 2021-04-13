@@ -5,17 +5,17 @@ const { Schema, model } = mongoose;
 const reserveCarSchema = Schema({
   id_owner: {
     type: Schema.Types.ObjectId,
-    ref: 'owner',
+    ref: 'Owner',
     required: true,
   },
   id_client: {
     type: Schema.Types.ObjectId,
-    ref: 'client',
+    ref: 'Client',
     required: true,
   },
   id_car: {
     type: Schema.Types.ObjectId,
-    ref: 'car',
+    ref: 'Car',
     required: true,
   },
   proposed_reduction: {
@@ -29,4 +29,4 @@ const reserveCarSchema = Schema({
   },
 });
 
-module.exports = model('reservecar', reserveCarSchema);
+module.exports = model('Reservecar', reserveCarSchema);

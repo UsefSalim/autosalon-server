@@ -45,4 +45,4 @@ const clientSchema = Schema({
   },
 });
 
-module.exports = model('client', clientSchema);
+module.exports = model('Client', clientSchema);

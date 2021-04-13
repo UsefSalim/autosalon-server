@@ -5,19 +5,19 @@ const { Schema, model } = mongoose;
 const ownerCarSchema = Schema({
   id_owner: {
     type: Schema.Types.ObjectId,
-    ref: 'owner',
+    ref: 'Owner',
     required: true,
   },
   id_place: {
     type: Schema.Types.ObjectId,
-    ref: 'place',
+    ref: 'Place',
     required: true,
   },
   id_car: {
     type: Schema.Types.ObjectId,
-    ref: 'car',
+    ref: 'Car',
     required: true,
   },
 });
 
-module.exports = model('ownercar', ownerCarSchema);
+module.exports = model('Ownercar', ownerCarSchema);

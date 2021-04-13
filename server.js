@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 require('dotenv').config({ path: './src/config/.env' });
 require('./src/config/db.js');
 // packages

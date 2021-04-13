@@ -14,4 +14,4 @@ const placeSchema = Schema({
   },
 });
 
-module.exports = model('place', placeSchema);
+module.exports = model('Place', placeSchema);
