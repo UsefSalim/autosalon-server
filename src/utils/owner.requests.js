@@ -15,8 +15,9 @@ exports.allCarsByIdOwner = async (owner) => ({
 exports.profileRequests = async (owner) => {
   const { allCars } = await this.allCarsByIdOwner(owner);
   const allSaledCars = allCars.filter(
-    (carsOwner) => carsOwner.is_saled === true
+    (carsOwner) => carsOwner.id_car.is_saled === true
   );
+  // console.log(allCars);
   const reservedCars = await ReserveCars.find({
     id_owner: owner._id,
     is_accepted: false,

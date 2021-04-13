@@ -70,15 +70,23 @@ exports.reserverdCarWithReduction = async (
   res
 ) => {
   const { id_owner } = await this.findIdOwnerFromIdCar(id_car);
-  const newReservation = new ReserveCar({
-    id_car,
-    id_client,
-    id_owner,
-    proposed_reduction,
-  });
-  const reservedCar = await newReservation.save();
-  if (reservedCar)
-    return res.status(200).json('Car reserver avec demande de reduction');
+  const reservedCar = await ReserveCar.findOne({ id_car, id_client });
+  if (reservedCar) {
+    reservedCar.proposed_reduction = proposed_reduction;
+    const savedCar = await reservedCar.save();
+    if (savedCar)
+      return res.status(200).json('Car reserver avec demande de reduction');
+  } else {
+    const newReservation = new ReserveCar({
+      id_car,
+      id_client,
+      id_owner,
+      proposed_reduction,
+    });
+    const savedCar = await newReservation.save();
+    if (savedCar)
+      return res.status(200).json('Car reserver avec demande de reduction');
+  }
 };
 
 exports.reservationwithoutReduction = async (id_car, id_client, res) => {
@@ -95,6 +103,7 @@ exports.reservationwithoutReduction = async (id_car, id_client, res) => {
     .update('Car', { _id: id_car }, { $set: { is_saled: true } })
     .update('Place', { _id: id_place }, { $set: { is_free: true } })
     .update('Reservecar', { id_car }, { $set: { proposed_reduction: 0 } })
+    .options({ multi: true })
     .run({ useMongoose: true });
   if (savereservCarAndUpdateCar)
     return res.status(200).json('Car Reserved avecSuccess');
